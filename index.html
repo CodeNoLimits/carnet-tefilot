@@ -83,6 +83,8 @@ async function tryOpen(pw, remember) {
 }
 document.getElementById('f').addEventListener('submit', ev => { ev.preventDefault(); document.getElementById('err').textContent = ''; tryOpen(document.getElementById('pw').value, true); });
 document.getElementById('lock').addEventListener('click', () => { try { localStorage.removeItem('tefilot_pw'); } catch (e) {} location.reload(); });
+// lien direct : la clé est après « #k= » (jamais envoyée au serveur), pas de saisie
+const fromLink = new URLSearchParams(location.hash.slice(1)).get('k');
 let saved = null; try { saved = localStorage.getItem('tefilot_pw'); } catch (e) {}
-if (saved) tryOpen(saved, false);
+if (fromLink || saved) { document.getElementById('f').hidden = true; tryOpen(fromLink || saved, !!fromLink).then(() => { if (document.getElementById('lockw').hidden) document.getElementById('f').hidden = false; }); }
 </script></body></html>
